@@ -52,7 +52,7 @@ async function harvestLoop () {
     try {
 
         // mine wheat
-        console.log("starting farmLoop");
+        console.log("starting harvest loop");
         const block = bot.findBlock({ 
             matching: (block) => {
                 return block && block.type === bot.registry.blocksByName.wheat.id && block.metadata === 7
