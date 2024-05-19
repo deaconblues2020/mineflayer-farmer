@@ -13,15 +13,21 @@ const bot = mineflayer.createBot({
   username: 'farmer'
 })
 
+defaultMovements = null
+
 bot.once('spawn', () => {
     bot.loadPlugin(pathfinder) // load pathfinder plugin into the bot
-    const defaultMovements = new Movements(bot) // create a new instance of the `Movements` class
+    defaultMovements = new Movements(bot) // create a new instance of the `Movements` class
     bot.pathfinder.setMovements(defaultMovements) // set the bot's movements to the `Movements` we just created
   })
 
 
-bot.on('chat', async (username, message) => {
-    if (username === bot.username) return
+//bot.on('chat', async (username, message) => {
+  bot.on('whisper', (username, message, rawMessage) => {
+    //if (username === bot.username) return
+    console.log(`I received a message from ${username}: ${message}`)
+
+    const target = bot.players[username] ? bot.players[username].entity : null
   
     if (message.startsWith('farm')) {
       const name = message.split(' ')[1]
@@ -31,7 +37,16 @@ bot.on('chat', async (username, message) => {
       }
       console.log("farm " + name);
       farmLoop() 
-    }
+    } else  if (message.startsWith('come')) {
+      if (!target) {
+        bot.chat('I don\'t see you !')
+        return
+      }
+      const p = target.position
+  
+      bot.pathfinder.setMovements(defaultMovements)
+      bot.pathfinder.setGoal(new GoalNear(p.x, p.y, p.z, 1))
+    } 
   
 })
 
