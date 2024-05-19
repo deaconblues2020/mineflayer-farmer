@@ -131,10 +131,17 @@ async function sowLoop () {
 
 async function plantSeed(block) {
     console.log("sowing")
-    await bot.equip(bot.registry.itemsByName.wheat_seeds.id, 'hand')
-    await bot.placeBlock(block, new Vec3(0, 1, 0))
+    try {
+      await bot.equip(bot.registry.itemsByName.wheat_seeds.id, 'hand')
+      await bot.placeBlock(block, new Vec3(0, 1, 0))
+  
+      setTimeout(sowLoop, 250)
+    }  catch (e) {
+      // probably because robot does not have any seeds
+      console.log(e)
+      setTimeout(gotoBed, 1000)
+    }
 
-    setTimeout(sowLoop, 250)
 }
 
 /*************************************************************
